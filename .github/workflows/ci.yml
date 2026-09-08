@@ -58,3 +58,15 @@ jobs:
         run: pnpm test
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/tasktracker
+
+  docker:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t task-tracker-backend ./server
+
+      - name: Build frontend image
+        run: docker build --build-arg NEXT_PUBLIC_API_URL=http://localhost:4200 -t task-tracker-frontend ./client
