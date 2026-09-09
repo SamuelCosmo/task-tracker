@@ -59,6 +59,18 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/tasktracker
 
+  sonarqube:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
   docker:
     needs: test
     runs-on: ubuntu-latest
