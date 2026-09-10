@@ -11,7 +11,7 @@ future React Native client).
 |---|--------|--------|--------|
 | 01 | [Concept, Information Architecture & Navigation](01-concept-ia-navigation.md) | Output sections 1–3 | Done |
 | 02 | [Design System (foundations)](02-design-system.md) | Output section 4 | Done |
-| 03 | Component System | Output section 6 | Pending |
+| 03 | [Component System](03-component-system.md) | Output section 6 | Done |
 | 04 | Screens — Dashboard, Task List | Output section 5 | Pending |
 | 05 | Screens — Create/Edit, Task Details | Output section 5 | Pending |
 | 06 | Screens — Categories, Calendar | Output section 5 | Pending |
