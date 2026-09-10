@@ -10,15 +10,15 @@ future React Native client).
 | # | Module | Covers | Status |
 |---|--------|--------|--------|
 | 01 | [Concept, Information Architecture & Navigation](01-concept-ia-navigation.md) | Output sections 1–3 | Done |
-| 02 | Design System (foundations) | Output section 4 | Pending |
-| 03 | Component System | Output section 6 | Pending |
-| 04 | Screens — Dashboard, Task List | Output section 5 | Pending |
-| 05 | Screens — Create/Edit, Task Details | Output section 5 | Pending |
-| 06 | Screens — Categories, Calendar | Output section 5 | Pending |
-| 07 | Empty, Loading & Error States | Output section 5 | Pending |
-| 08 | Responsive Behavior | Output section 7 | Pending |
-| 09 | Light & Dark Mode Guidelines | Output sections 8–9 | Pending |
-| 10 | UX Recommendations & Implementation Notes | Output section 10 | Pending |
+| 02 | [Design System (foundations)](02-design-system.md) | Output section 4 | Done |
+| 03 | [Component System](03-component-system.md) | Output section 6 | Done |
+| 04 | [Screens — Dashboard, Task List](04-screens-dashboard-tasklist.md) | Output section 5 | Done |
+| 05 | [Screens — Create/Edit, Task Details](05-screens-create-details.md) | Output section 5 | Done |
+| 06 | [Screens — Categories, Calendar](06-screens-categories-calendar.md) | Output section 5 | Done |
+| 07 | [Empty, Loading & Error States](07-empty-loading-error-states.md) | Output section 5 | Done |
+| 08 | [Responsive Behavior](08-responsive-behavior.md) | Output section 7 | Done |
+| 09 | [Light & Dark Mode Guidelines](09-light-dark-mode.md) | Output sections 8–9 | Done |
+| 10 | [UX Recommendations & Implementation Notes](10-ux-recommendations.md) | Output section 10 | Done |
 
 ## Conventions used in these docs
 
@@ -27,3 +27,9 @@ future React Native client).
 - **Spacing** is expressed in the 4px scale (`space-4` = 16px), never in raw pixels
   inside screen descriptions.
 - Every non-obvious decision carries a short **Why:** line.
+
+## Action required
+
+Module 02 §4.5.1 and §4.5.6 document **ten WCAG contrast failures** in the palette currently
+committed to `client/app/globals.css`, with verified replacement values in §4.12.
+That token delta should land before any component is built against the current tokens.
