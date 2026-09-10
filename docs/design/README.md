@@ -10,7 +10,7 @@ future React Native client).
 | # | Module | Covers | Status |
 |---|--------|--------|--------|
 | 01 | [Concept, Information Architecture & Navigation](01-concept-ia-navigation.md) | Output sections 1–3 | Done |
-| 02 | Design System (foundations) | Output section 4 | Pending |
+| 02 | [Design System (foundations)](02-design-system.md) | Output section 4 | Done |
 | 03 | Component System | Output section 6 | Pending |
 | 04 | Screens — Dashboard, Task List | Output section 5 | Pending |
 | 05 | Screens — Create/Edit, Task Details | Output section 5 | Pending |
@@ -27,3 +27,9 @@ future React Native client).
 - **Spacing** is expressed in the 4px scale (`space-4` = 16px), never in raw pixels
   inside screen descriptions.
 - Every non-obvious decision carries a short **Why:** line.
+
+## Action required
+
+Module 02 §4.5.1 documents **seven WCAG contrast failures** in the palette currently
+committed to `client/app/globals.css`, with verified replacement values in §4.12.
+That token delta should land before any component is built against the current tokens.
