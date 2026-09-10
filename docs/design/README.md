@@ -15,7 +15,7 @@ future React Native client).
 | 04 | [Screens — Dashboard, Task List](04-screens-dashboard-tasklist.md) | Output section 5 | Done |
 | 05 | [Screens — Create/Edit, Task Details](05-screens-create-details.md) | Output section 5 | Done |
 | 06 | [Screens — Categories, Calendar](06-screens-categories-calendar.md) | Output section 5 | Done |
-| 07 | Empty, Loading & Error States | Output section 5 | Pending |
+| 07 | [Empty, Loading & Error States](07-empty-loading-error-states.md) | Output section 5 | Done |
 | 08 | Responsive Behavior | Output section 7 | Pending |
 | 09 | Light & Dark Mode Guidelines | Output sections 8–9 | Pending |
 | 10 | UX Recommendations & Implementation Notes | Output section 10 | Pending |
