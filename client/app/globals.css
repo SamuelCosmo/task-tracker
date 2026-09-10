@@ -1,26 +1,192 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Dark mode is driven by the `dark` class or `data-theme="dark"` on <html>,
+   and falls back to the OS preference when neither is set. */
+@custom-variant dark {
+  &:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:not(.light, .light *, [data-theme="light"], [data-theme="light"] *)) {
+      @slot;
+    }
+  }
 }
 
+:root {
+  /* Backgrounds */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-secondary: #f1f5f9;
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+
+  /* Primary */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-light: #eef2ff;
+
+  /* Borders */
+  --border: #e2e8f0;
+  --border-focus: #818cf8;
+
+  /* Status */
+  --success: #22c55e;
+  --success-light: #dcfce7;
+
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+
+  --error: #ef4444;
+  --error-light: #fee2e2;
+
+  --info: #3b82f6;
+  --info-light: #dbeafe;
+
+  /* Task Priority */
+  --priority-low: #22c55e;
+  --priority-medium: #f59e0b;
+  --priority-high: #ef4444;
+
+  /* Shadows */
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
+/* Dark palette — applied when the OS asks for it, unless light is forced. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme="light"]) {
+    /* Backgrounds */
+    --background: #0f172a;
+    --surface: #1e293b;
+    --surface-secondary: #334155;
+
+    /* Text */
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+
+    /* Primary */
+    --primary: #818cf8;
+    --primary-hover: #a5b4fc;
+    --primary-light: #312e81;
+
+    /* Borders */
+    --border: #334155;
+    --border-focus: #818cf8;
+
+    /* Status */
+    --success: #4ade80;
+    --success-light: #14532d;
+
+    --warning: #fbbf24;
+    --warning-light: #78350f;
+
+    --error: #f87171;
+    --error-light: #7f1d1d;
+
+    --info: #60a5fa;
+    --info-light: #1e3a8a;
+
+    /* Task Priority */
+    --priority-low: #4ade80;
+    --priority-medium: #fbbf24;
+    --priority-high: #f87171;
+
+    /* Shadows */
+    --shadow: rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Dark palette — explicitly selected, wins over the OS preference. */
+.dark,
+[data-theme="dark"] {
+  /* Backgrounds */
+  --background: #0f172a;
+  --surface: #1e293b;
+  --surface-secondary: #334155;
+
+  /* Text */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  /* Primary */
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --primary-light: #312e81;
+
+  /* Borders */
+  --border: #334155;
+  --border-focus: #818cf8;
+
+  /* Status */
+  --success: #4ade80;
+  --success-light: #14532d;
+
+  --warning: #fbbf24;
+  --warning-light: #78350f;
+
+  --error: #f87171;
+  --error-light: #7f1d1d;
+
+  --info: #60a5fa;
+  --info-light: #1e3a8a;
+
+  /* Task Priority */
+  --priority-low: #4ade80;
+  --priority-medium: #fbbf24;
+  --priority-high: #f87171;
+
+  /* Shadows */
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* Expose the palette as Tailwind utilities: bg-surface, text-secondary,
+   border-border, ring-border-focus, shadow-card, etc. */
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+
+  --color-border: var(--border);
+  --color-border-focus: var(--border-focus);
+
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+
+  --color-info: var(--info);
+  --color-info-light: var(--info-light);
+
+  --color-priority-low: var(--priority-low);
+  --color-priority-medium: var(--priority-medium);
+  --color-priority-high: var(--priority-high);
+
+  --shadow-card: 0 1px 3px var(--shadow), 0 1px 2px -1px var(--shadow);
+  --shadow-card-lg: 0 10px 15px -3px var(--shadow), 0 4px 6px -4px var(--shadow);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text-primary);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }

@@ -1,0 +1,6 @@
+{
+  "enabledPlugins": {
+    "example-skills@anthropic-agent-skills": true,
+    "code-review@claude-plugins-official": true
+  }
+}
