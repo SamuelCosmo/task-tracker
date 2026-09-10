@@ -119,5 +119,5 @@ task-tracker/
 - [x] Dockerized (backend, frontend, database)
 - [x] GraphQL API alongside REST
 - [x] Images published to Docker Hub
-- [ ] Automated tests (Jest)
-- [ ] CI/CD pipeline (GitHub Actions + SonarCloud)
+- [x] Automated tests (Jest)
+- [x] CI/CD pipeline (GitHub Actions + SonarCloud)
