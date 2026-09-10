@@ -236,7 +236,7 @@ change the fills, so the vivid fills are preserved where they work.
 | `--surface-overlay` | `#293b52` | **new** | elevation 3–4 |
 | `--text-primary` | `#f8fafc` | — | 13.98:1 on surface |
 | `--text-secondary` | `#cbd5e1` | — | 9.85:1 on surface |
-| `--text-muted` | `#94a3b8` | — | 5.71:1 on surface |
+| `--text-muted` | `#a3b1c4` | **was `#94a3b8`** | 6.72:1 on surface; 5.08:1 on modal — see §4.5.6  |
 | `--text-disabled` | `#64748b` | **new** | exempt |
 | `--primary` | `#818cf8` | — | 4.90:1 on surface |
 | `--primary-hover` | `#a5b4fc` | — | |
@@ -244,7 +244,7 @@ change the fills, so the vivid fills are preserved where they work.
 | `--on-primary` | `#0f172a` | **new — critical** | 5.98:1 on primary (white was 2.98) |
 | `--primary-strong` | `#a5b4fc` | **new** | 5.73:1 on `--primary-light` |
 | `--border` | `#334155` | — | decorative only |
-| `--border-strong` | `#64748b` | **new** | 3.07:1 on surface |
+| `--border-strong` | `#7c8ca1` | **new** | 3.23–4.27:1 across all dark surfaces  |
 | `--border-focus` | `#a5b4fc` | **was `#818cf8`** | 7.34:1 on surface, 8.96:1 on background |
 | `--success-strong` | `#4ade80` | new alias | 5.23:1 on `--success-light` |
 | `--warning-strong` | `#fbbf24` | new alias | 5.43:1 on `--warning-light` |
@@ -309,6 +309,36 @@ This is disambiguated by *shape and position* — categories are always full-rou
 with an icon in the metadata row; status and priority are always squared badges. If
 that proves confusing in testing, the fallback is to drop Amber and Emerald from the
 category set rather than to recolor the status system.
+
+
+### 4.5.6 Elevation changes foreground requirements (dark mode)
+
+Adding `--surface-raised` and `--surface-overlay` (§4.4) creates lighter backgrounds
+than `--surface`, which **reduces** the contrast of every foreground token placed on
+them. Audited across all four dark surfaces:
+
+| Foreground | on `--surface` | on `--surface-raised` | on `--surface-overlay` | Verdict |
+|---|---|---|---|---|
+| `--text-muted` `#94a3b8` | 5.71 | 4.93 | **4.45** | Fails on overlays |
+| `--border-strong` `#64748b` | 3.07 | **2.65** | **2.40** | Fails on both |
+| `--primary` `#818cf8` as *text* | 4.90 | **4.23** | **3.82** | Fails on both |
+
+Two token changes and one usage rule resolve all three, with no elevation-scoped
+overrides needed:
+
+1. **`--text-muted` (dark) → `#a3b1c4`** — 6.72 / 5.80 / 5.24 / 5.08 across surface,
+   raised, overlay, and modal. Passes everywhere.
+2. **`--border-strong` (dark) → `#7c8ca1`** — 4.27 / 3.68 / 3.32 / 3.23. Clears the 3:1
+   UI-boundary threshold on every surface.
+3. **`--primary` is never used as text in dark mode; `--primary-strong` `#a5b4fc` is.**
+   It scores 7.34 / 6.34 / 5.72 / 5.55. `--primary` remains correct as a *fill* (4.90 /
+   4.23 / 3.82 / 3.71, all above the 3:1 required of a UI fill) and as the checkbox and
+   button background.
+
+**Why this is easy to miss:** the elevated surfaces are introduced to solve a *dark-mode
+separation* problem (§4.4), and solving it silently invalidates contrast pairings that
+were verified against the base surface. Any future surface added above `--surface` must
+be re-audited against these three foregrounds.
 
 ---
 
@@ -537,9 +567,10 @@ is the spec for Module 10.
 | `--on-primary` | — | `#0f172a` (new — **not white**) |
 | `--primary-strong` | — | `#a5b4fc` (new) |
 | `--text-disabled` | — | `#64748b` (new) |
+| `--text-muted` | `#94a3b8` | `#a3b1c4` |
 | `--surface-raised` | — | `#243449` (new) |
 | `--surface-overlay` | — | `#293b52` (new) |
-| `--border-strong` | — | `#64748b` (new) |
+| `--border-strong` | — | `#7c8ca1` (new)  |
 | `--success-strong` | — | `#4ade80` (new) |
 | `--warning-strong` | — | `#fbbf24` (new) |
 | `--error-strong` | — | `#fca5a5` (new) |
