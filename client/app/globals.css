@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Momentum design tokens.
+   Spec: docs/design/02-design-system.md (§4.12 token delta, §4.5.6 dark audit)
+                                          and 09-light-dark-mode.md
+
+   Every colour token is declared ONCE via light-dark(). The theme is selected by
+   `color-scheme`, so the light and dark palettes can no longer drift apart — the
+   previous file repeated the entire dark palette twice.
+--------------------------------------------------------------------------- */
+
 /* Dark mode is driven by the `dark` class or `data-theme="dark"` on <html>,
    and falls back to the OS preference when neither is set. */
 @custom-variant dark {
@@ -13,180 +23,317 @@
   }
 }
 
+/* Theme selection. `color-scheme` also styles native scrollbars, form controls
+   and the browser's own UI to match. */
 :root {
-  /* Backgrounds */
-  --background: #f8fafc;
-  --surface: #ffffff;
-  --surface-secondary: #f1f5f9;
-
-  /* Text */
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-
-  /* Primary */
-  --primary: #4f46e5;
-  --primary-hover: #4338ca;
-  --primary-light: #eef2ff;
-
-  /* Borders */
-  --border: #e2e8f0;
-  --border-focus: #818cf8;
-
-  /* Status */
-  --success: #22c55e;
-  --success-light: #dcfce7;
-
-  --warning: #f59e0b;
-  --warning-light: #fef3c7;
-
-  --error: #ef4444;
-  --error-light: #fee2e2;
-
-  --info: #3b82f6;
-  --info-light: #dbeafe;
-
-  /* Task Priority */
-  --priority-low: #22c55e;
-  --priority-medium: #f59e0b;
-  --priority-high: #ef4444;
-
-  /* Shadows */
-  --shadow: rgba(15, 23, 42, 0.08);
+  color-scheme: light dark;
+}
+:root.light,
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root.dark,
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
-/* Dark palette — applied when the OS asks for it, unless light is forced. */
-@media (prefers-color-scheme: dark) {
-  :root:not(.light):not([data-theme="light"]) {
-    /* Backgrounds */
-    --background: #0f172a;
-    --surface: #1e293b;
-    --surface-secondary: #334155;
+:root {
+  /* --- Surfaces -----------------------------------------------------------
+     Light: elevation is carried by shadow; surfaces stay white.
+     Dark:  elevation is carried by surface lightness + a retained border. */
+  --background: light-dark(#f8fafc, #0f172a);
+  --surface: light-dark(#ffffff, #1e293b);
+  --surface-raised: light-dark(#ffffff, #243449);
+  --surface-overlay: light-dark(#ffffff, #293b52);
+  --surface-modal: light-dark(#ffffff, #2a3d55);
+  /* Inset/well/track. In dark this is LIGHTER than --surface, so inset regions
+     must carry no border or they read as raised. */
+  --surface-secondary: light-dark(#f1f5f9, #334155);
 
-    /* Text */
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
+  /* --- Text ---------------------------------------------------------------
+     Light tiers were shifted one step darker: the old --text-muted (#94a3b8)
+     scored 2.56:1 on white. Dark --text-muted was raised to clear 4.5:1 on the
+     elevated surfaces too (#94a3b8 scored 4.45:1 on --surface-overlay). */
+  --text-primary: light-dark(#0f172a, #f8fafc);
+  --text-secondary: light-dark(#475569, #cbd5e1);
+  --text-muted: light-dark(#64748b, #a3b1c4);
+  /* Disabled only. Exempt from WCAG 1.4.3 — always pair with aria-disabled. */
+  --text-disabled: light-dark(#94a3b8, #64748b);
 
-    /* Primary */
-    --primary: #818cf8;
-    --primary-hover: #a5b4fc;
-    --primary-light: #312e81;
+  /* --- Primary ------------------------------------------------------------ */
+  --primary: light-dark(#4f46e5, #818cf8);
+  --primary-hover: light-dark(#4338ca, #a5b4fc);
+  --primary-light: light-dark(#eef2ff, #312e81);
+  /* Indigo TEXT. In dark, --primary drops to 3.82:1 on --surface-overlay, so
+     links and active nav labels use this tier instead. */
+  --primary-strong: light-dark(#4f46e5, #a5b4fc);
+  /* Label on a --primary fill. NOT white in dark: white scores 2.98:1 on
+     #818cf8, dark navy scores 5.98:1. */
+  --on-primary: light-dark(#ffffff, #0f172a);
+  /* Indigo text on an INVERTED surface (toasts: --text-primary fill). Light mode
+     inverts to a dark fill, so it needs the light indigo, and vice versa.
+     8.96:1 on #0f172a, 6.01:1 on #f8fafc. */
+  --primary-inverse: light-dark(#a5b4fc, #4f46e5);
 
-    /* Borders */
-    --border: #334155;
-    --border-focus: #818cf8;
+  /* --- Borders ------------------------------------------------------------ */
+  --border: light-dark(#e2e8f0, #334155); /* decorative separators, card edges */
+  --border-strong: light-dark(#64748b, #7c8ca1); /* interactive control outlines, >=3:1 */
+  --border-focus: light-dark(#4f46e5, #a5b4fc);
 
-    /* Status */
-    --success: #4ade80;
-    --success-light: #14532d;
+  /* --- Status -------------------------------------------------------------
+     `-light` is the badge fill, `-strong` is the text on it. The 500-weight
+     base values are fills ONLY — as text on white they score 2.1-2.3:1. */
+  --success: light-dark(#22c55e, #4ade80);
+  --success-light: light-dark(#dcfce7, #14532d);
+  --success-strong: light-dark(#15803d, #4ade80);
 
-    --warning: #fbbf24;
-    --warning-light: #78350f;
+  --warning: light-dark(#f59e0b, #fbbf24);
+  --warning-light: light-dark(#fef3c7, #78350f);
+  --warning-strong: light-dark(#b45309, #fbbf24);
 
-    --error: #f87171;
-    --error-light: #7f1d1d;
+  --error: light-dark(#ef4444, #f87171);
+  --error-light: light-dark(#fee2e2, #7f1d1d);
+  --error-strong: light-dark(#b91c1c, #fca5a5);
+  /* Label on an --error-strong fill (danger button). Same logic as --on-primary:
+     white on #fca5a5 scores 1.90:1 in dark; navy scores 9.41:1. */
+  --on-error: light-dark(#ffffff, #0f172a);
 
-    --info: #60a5fa;
-    --info-light: #1e3a8a;
+  --info: light-dark(#3b82f6, #60a5fa);
+  --info-light: light-dark(#dbeafe, #1e3a8a);
+  --info-strong: light-dark(#1d4ed8, #93c5fd);
 
-    /* Task Priority */
-    --priority-low: #4ade80;
-    --priority-medium: #fbbf24;
-    --priority-high: #f87171;
+  /* --- Priority -----------------------------------------------------------
+     Aliases, so priority can never disagree with its status colour. These are
+     fills (the 3px row bar); the row always carries a text label as well. */
+  --priority-low: var(--success);
+  --priority-medium: var(--warning);
+  --priority-high: var(--error);
 
-    /* Shadows */
-    --shadow: rgba(0, 0, 0, 0.3);
-  }
+  /* --- Category palette ---------------------------------------------------
+     8 fixed pairs, each verified >=4.5:1 as text on its own tint in both
+     themes. Users pick from these; no free colour input. */
+  --category-indigo: light-dark(#4f46e5, #a5b4fc);
+  --category-indigo-tint: light-dark(#eef2ff, #312e81);
+  --category-sky: light-dark(#0369a1, #7dd3fc);
+  --category-sky-tint: light-dark(#e0f2fe, #075985);
+  --category-emerald: light-dark(#047857, #6ee7b7);
+  --category-emerald-tint: light-dark(#d1fae5, #065f46);
+  --category-amber: light-dark(#b45309, #fcd34d);
+  --category-amber-tint: light-dark(#fef3c7, #78350f);
+  --category-rose: light-dark(#be123c, #fecdd3);
+  --category-rose-tint: light-dark(#ffe4e6, #9f1239);
+  --category-violet: light-dark(#7c3aed, #c4b5fd);
+  --category-violet-tint: light-dark(#f3e8ff, #5b21b6);
+  --category-teal: light-dark(#0f766e, #5eead4);
+  --category-teal-tint: light-dark(#ccfbf1, #115e59);
+  --category-slate: light-dark(#475569, #cbd5e1);
+  --category-slate-tint: light-dark(#f1f5f9, #334155);
+
+  /* --- Elevation ----------------------------------------------------------
+     Shadow geometry is identical across themes; only the colour changes. Dark
+     shadows are near-black and deeper, but they only soften the edge — the
+     surface ladder above is what actually separates elevated things in dark. */
+  --shadow-1: light-dark(rgb(15 23 42 / 0.08), rgb(0 0 0 / 0.3));
+  --shadow-2: light-dark(rgb(15 23 42 / 0.1), rgb(0 0 0 / 0.35));
+  --shadow-3: light-dark(rgb(15 23 42 / 0.1), rgb(0 0 0 / 0.45));
+  --shadow-4: light-dark(rgb(15 23 42 / 0.14), rgb(0 0 0 / 0.55));
+
+  /* Modal/sheet scrim. Deeper in dark: less luminance separates it from the
+     content behind it. */
+  --scrim: light-dark(rgb(15 23 42 / 0.5), rgb(0 0 0 / 0.65));
+
+  /* --- Motion durations ---------------------------------------------------
+     Tailwind has no duration theme namespace; use as duration-(--duration-fast). */
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 280ms;
+  --duration-sheet: 320ms;
+
+  /* --- Z-index ------------------------------------------------------------
+     Named and sparse; use as z-(--z-modal). Never bypass with arbitrary values. */
+  --z-base: 0;
+  --z-sticky: 10;
+  --z-nav: 20;
+  --z-dropdown: 30;
+  --z-fab: 35;
+  --z-panel: 40;
+  --z-backdrop: 50;
+  --z-modal: 60;
+  --z-toast: 70; /* above modal: an undo toast raised from a modal must be reachable */
+  --z-tooltip: 80;
 }
 
-/* Dark palette — explicitly selected, wins over the OS preference. */
-.dark,
-[data-theme="dark"] {
-  /* Backgrounds */
-  --background: #0f172a;
-  --surface: #1e293b;
-  --surface-secondary: #334155;
-
-  /* Text */
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-
-  /* Primary */
-  --primary: #818cf8;
-  --primary-hover: #a5b4fc;
-  --primary-light: #312e81;
-
-  /* Borders */
-  --border: #334155;
-  --border-focus: #818cf8;
-
-  /* Status */
-  --success: #4ade80;
-  --success-light: #14532d;
-
-  --warning: #fbbf24;
-  --warning-light: #78350f;
-
-  --error: #f87171;
-  --error-light: #7f1d1d;
-
-  --info: #60a5fa;
-  --info-light: #1e3a8a;
-
-  /* Task Priority */
-  --priority-low: #4ade80;
-  --priority-medium: #fbbf24;
-  --priority-high: #f87171;
-
-  /* Shadows */
-  --shadow: rgba(0, 0, 0, 0.3);
-}
-
-/* Expose the palette as Tailwind utilities: bg-surface, text-secondary,
-   border-border, ring-border-focus, shadow-card, etc. */
+/* ---------------------------------------------------------------------------
+   Tailwind theme mapping. `inline` means these alias the vars above rather than
+   emitting a second copy, so light-dark() stays live.
+--------------------------------------------------------------------------- */
 @theme inline {
+  /* Colours -> bg-surface, text-text-muted, border-border-strong, ring-border-focus */
   --color-background: var(--background);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-overlay: var(--surface-overlay);
+  --color-surface-modal: var(--surface-modal);
   --color-surface-secondary: var(--surface-secondary);
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
+  --color-text-disabled: var(--text-disabled);
 
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-primary-light: var(--primary-light);
+  --color-primary-strong: var(--primary-strong);
+  --color-on-primary: var(--on-primary);
+  --color-primary-inverse: var(--primary-inverse);
 
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-border-focus: var(--border-focus);
 
   --color-success: var(--success);
   --color-success-light: var(--success-light);
-
+  --color-success-strong: var(--success-strong);
   --color-warning: var(--warning);
   --color-warning-light: var(--warning-light);
-
+  --color-warning-strong: var(--warning-strong);
   --color-error: var(--error);
   --color-error-light: var(--error-light);
-
+  --color-error-strong: var(--error-strong);
+  --color-on-error: var(--on-error);
   --color-info: var(--info);
   --color-info-light: var(--info-light);
+  --color-info-strong: var(--info-strong);
 
   --color-priority-low: var(--priority-low);
   --color-priority-medium: var(--priority-medium);
   --color-priority-high: var(--priority-high);
 
-  --shadow-card: 0 1px 3px var(--shadow), 0 1px 2px -1px var(--shadow);
-  --shadow-card-lg: 0 10px 15px -3px var(--shadow), 0 4px 6px -4px var(--shadow);
+  --color-category-indigo: var(--category-indigo);
+  --color-category-indigo-tint: var(--category-indigo-tint);
+  --color-category-sky: var(--category-sky);
+  --color-category-sky-tint: var(--category-sky-tint);
+  --color-category-emerald: var(--category-emerald);
+  --color-category-emerald-tint: var(--category-emerald-tint);
+  --color-category-amber: var(--category-amber);
+  --color-category-amber-tint: var(--category-amber-tint);
+  --color-category-rose: var(--category-rose);
+  --color-category-rose-tint: var(--category-rose-tint);
+  --color-category-violet: var(--category-violet);
+  --color-category-violet-tint: var(--category-violet-tint);
+  --color-category-teal: var(--category-teal);
+  --color-category-teal-tint: var(--category-teal-tint);
+  --color-category-slate: var(--category-slate);
+  --color-category-slate-tint: var(--category-slate-tint);
+
+  --color-scrim: var(--scrim);
+
+  /* Type scale -> text-body, text-h2, text-overline.
+     NOTE: this redefines Tailwind's default text-sm (14px) as 13px, per the
+     design system's scale. Base body size is 14px, not 16px. */
+  --text-display: 32px;
+  --text-display--line-height: 40px;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 600;
+
+  --text-h1: 24px;
+  --text-h1--line-height: 32px;
+  --text-h1--letter-spacing: -0.015em;
+  --text-h1--font-weight: 600;
+
+  --text-h2: 20px;
+  --text-h2--line-height: 28px;
+  --text-h2--letter-spacing: -0.01em;
+  --text-h2--font-weight: 600;
+
+  --text-h3: 16px;
+  --text-h3--line-height: 24px;
+  --text-h3--font-weight: 600;
+
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 24px;
+
+  --text-body: 14px;
+  --text-body--line-height: 20px;
+
+  --text-body-strong: 14px;
+  --text-body-strong--line-height: 20px;
+  --text-body-strong--font-weight: 500;
+
+  --text-sm: 13px;
+  --text-sm--line-height: 18px;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 500;
+
+  --text-overline: 11px;
+  --text-overline--line-height: 16px;
+  --text-overline--letter-spacing: 0.06em;
+  --text-overline--font-weight: 600;
+
+  /* Radius -> rounded-md is the default control radius.
+     Nesting rule: an inner radius must be SMALLER than its container's. */
+  --radius-xs: 4px; /* checkbox, swatch */
+  --radius-sm: 6px; /* badge */
+  --radius-md: 8px; /* button, input, select */
+  --radius-lg: 12px; /* card, popover, day cell */
+  --radius-xl: 16px; /* modal, sheet, side panel */
+
+  /* Elevation -> shadow-card, shadow-raised, shadow-overlay, shadow-modal */
+  --shadow-card: 0 1px 3px var(--shadow-1), 0 1px 2px -1px var(--shadow-1);
+  --shadow-raised: 0 4px 6px -1px var(--shadow-2), 0 2px 4px -2px var(--shadow-2);
+  --shadow-overlay: 0 10px 15px -3px var(--shadow-3), 0 4px 6px -4px var(--shadow-3);
+  --shadow-modal: 0 20px 25px -5px var(--shadow-4), 0 8px 10px -6px var(--shadow-4);
+
+  /* Skeleton shimmer -> animate-shimmer (1.6s, collapses under reduced-motion) */
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
+
+  /* Easing -> ease-standard, ease-sheet */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-sheet: cubic-bezier(0.32, 0.72, 0, 1);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+/* Spacing is left on Tailwind's default 4px rem-based scale — it already matches
+   the design system's 4px grid, and rem keeps it responsive to the user's
+   browser font-size setting. The React Native token object uses px equivalents. */
+
 body {
   background: var(--background);
   color: var(--text-primary);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+}
+
+/* Focus ring: 2px at 2px offset, never removed. Zero specificity via :where()
+   so components can reposition it without fighting this rule. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Dates, counts and progress numbers must not jitter as values change. */
+:where(time, [data-numeric]) {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

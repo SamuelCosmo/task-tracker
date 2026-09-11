@@ -88,7 +88,7 @@ The primary action atom. Five variants, three sizes.
 | `primary` | `--primary` | `--on-primary` | none | The one main action per screen |
 | `secondary` | `--surface` | `--text-primary` | 1px `--border-strong` | Cancel, secondary actions |
 | `ghost` | transparent | `--text-secondary` | none | Toolbar actions, low-emphasis |
-| `danger` | `--error-strong` | `#ffffff` | none | Delete confirmation only |
+| `danger` | `--error-strong` | `--on-error` | none | Delete confirmation only. `--on-error` is white in light and `#0f172a` in dark — white on the dark fill scores 1.90:1 |
 | `link` | transparent | `--primary` | none | Inline text actions |
 
 | Size | Height | Padding-x | Text | Icon | Radius |

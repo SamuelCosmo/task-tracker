@@ -236,6 +236,10 @@ The brief's explicit dark-mode requirement. Four things must all hold:
 - **The transition is not animated.** A 200ms cross-fade of every color on the page is
   expensive, janky on long lists, and draws attention to a change the user just
   requested and already expects.
+  *Implementation note:* this is enforced, not just preferred. Every component
+  colour transition is suspended for one frame while the theme class flips, so
+  the whole page snaps together instead of each transitioned element fading over
+  its own duration.
 - **`color-scheme: dark` is set on the root** so native scrollbars, form controls, and
   the browser's own UI match.
 - Meta `theme-color` updates to `--background` for each theme, so mobile browser chrome
