@@ -39,10 +39,35 @@ function readStoredTheme(): Theme {
   }
 }
 
+/**
+ * Suspend CSS transitions for one frame while the theme flips.
+ *
+ * Two reasons. The spec says theme changes are not animated (Module 09 §9.8) —
+ * a 200ms cross-fade of every colour on the page is janky on long lists. And
+ * more importantly: Chrome never completes a colour transition whose target
+ * changed through the downlevelled light-dark() toggle, so any element with a
+ * colour transition would FREEZE at the old theme's colour. Verified on
+ * buttons, chips and inputs; elements without transitions were fine.
+ */
+function withoutTransitions(mutate: () => void) {
+  const style = document.createElement('style');
+  style.textContent = '*,*::before,*::after{transition:none!important}';
+  document.head.appendChild(style);
+  mutate();
+  // Force a synchronous style + layout pass while transitions are disabled.
+  // This also cancels any transition already stuck mid-flight.
+  void document.documentElement.offsetHeight;
+  // setTimeout rather than requestAnimationFrame: rAF does not fire in a
+  // hidden tab, which would leave transitions disabled until it is shown.
+  setTimeout(() => style.remove(), 0);
+}
+
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
-  root.classList.remove('light', 'dark');
-  if (theme !== 'system') root.classList.add(theme);
+  withoutTransitions(() => {
+    root.classList.remove('light', 'dark');
+    if (theme !== 'system') root.classList.add(theme);
+  });
 
   // Keep the mobile browser chrome in step with the page.
   const background = getComputedStyle(root).getPropertyValue('--background').trim();

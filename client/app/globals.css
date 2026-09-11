@@ -90,6 +90,9 @@
   --error: light-dark(#ef4444, #f87171);
   --error-light: light-dark(#fee2e2, #7f1d1d);
   --error-strong: light-dark(#b91c1c, #fca5a5);
+  /* Label on an --error-strong fill (danger button). Same logic as --on-primary:
+     white on #fca5a5 scores 1.90:1 in dark; navy scores 9.41:1. */
+  --on-error: light-dark(#ffffff, #0f172a);
 
   --info: light-dark(#3b82f6, #60a5fa);
   --info-light: light-dark(#dbeafe, #1e3a8a);
@@ -194,6 +197,7 @@
   --color-error: var(--error);
   --color-error-light: var(--error-light);
   --color-error-strong: var(--error-strong);
+  --color-on-error: var(--on-error);
   --color-info: var(--info);
   --color-info-light: var(--info-light);
   --color-info-strong: var(--info-strong);
@@ -278,6 +282,13 @@
   --shadow-raised: 0 4px 6px -1px var(--shadow-2), 0 2px 4px -2px var(--shadow-2);
   --shadow-overlay: 0 10px 15px -3px var(--shadow-3), 0 4px 6px -4px var(--shadow-3);
   --shadow-modal: 0 20px 25px -5px var(--shadow-4), 0 8px 10px -6px var(--shadow-4);
+
+  /* Skeleton shimmer -> animate-shimmer (1.6s, collapses under reduced-motion) */
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+  }
 
   /* Easing -> ease-standard, ease-sheet */
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
