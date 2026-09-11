@@ -1,8 +1,8 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Data model for the Momentum design system.
+// Spec: docs/design/01-concept-ia-navigation.md §2.1–2.2
 
 generator client {
   provider = "prisma-client-js"
@@ -13,8 +13,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// A task's lifecycle state. This is the single source of truth for completion:
+/// `done` is derived as `status == DONE` and is never stored, so the checkbox and
+/// the status badge cannot contradict each other.
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 model Task {
-  id    Int     @id @default(autoincrement())
-  title String
-  done  Boolean @default(false)
+  id          Int        @id @default(autoincrement())
+  /// The only field required at creation. UI caps this at 120 characters.
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  /// Defaults to MEDIUM, not LOW: LOW is a judgement most tasks have not earned,
+  /// and a list where everything is LOW makes the priority signal useless.
+  priority    Priority   @default(MEDIUM)
+  /// Date-only. Stored as a DATE so it cannot drift across timezones.
+  /// "Overdue" is derived (dueDate < today AND status != DONE), never stored.
+  dueDate     DateTime?  @db.Date
+  categoryId  Int?
+  category    Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  /// Set when status becomes DONE, cleared on reopen. Powers completion stats.
+  completedAt DateTime?
+
+  @@index([status])
+  @@index([dueDate])
+  @@index([categoryId])
+}
+
+model Category {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  /// A palette name from the fixed 8 (indigo, sky, emerald, amber, rose, violet,
+  /// teal, slate) — not a hex value, so retuning a token never needs a data
+  /// migration. Verified pairs live in client/app/globals.css.
+  color String @default("slate")
+  /// Icon name from the app's icon set.
+  icon  String @default("tag")
+  tasks Task[]
 }

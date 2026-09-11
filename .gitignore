@@ -17,4 +17,4 @@ node_modules/
 Thumbs.db
 
 # test coverage (once tests exist)
-coverage/
+coverage/.claude/worktrees/
