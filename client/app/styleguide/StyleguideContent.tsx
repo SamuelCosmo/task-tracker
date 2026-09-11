@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import ThemeToggle from '@/app/ThemeToggle';
+import { MoleculesSection } from './MoleculesSection';
+import { InteractiveSection } from './InteractiveSection';
 import {
   Badge,
   Button,
@@ -92,7 +94,7 @@ export function StyleguideContent() {
       <header className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-h1 text-text-primary">Styleguide</h1>
-          <p className="text-sm text-text-muted">Phase 1 atoms · 16 of 16 · every state · both themes</p>
+          <p className="text-sm text-text-muted">Atoms 16/16 · Molecules 14/14 · every state · both themes</p>
         </div>
         <ThemeToggle />
       </header>
@@ -401,6 +403,8 @@ export function StyleguideContent() {
             </span>
           </Row>
         </Section>
+        <MoleculesSection />
+        <InteractiveSection />
       </div>
     </div>
   );

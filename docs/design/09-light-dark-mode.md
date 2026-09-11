@@ -237,11 +237,9 @@ The brief's explicit dark-mode requirement. Four things must all hold:
   expensive, janky on long lists, and draws attention to a change the user just
   requested and already expects.
   *Implementation note:* this is enforced, not just preferred. Every component
-  colour transition is suspended for one frame while the theme class flips. Found
-  during Phase 1: Chrome never completes a colour transition whose target changed
-  through the downlevelled `light-dark()` var toggle, so buttons, chips and inputs
-  would otherwise **freeze at the previous theme's colour** while untransitioned
-  elements switched correctly.
+  colour transition is suspended for one frame while the theme class flips, so
+  the whole page snaps together instead of each transitioned element fading over
+  its own duration.
 - **`color-scheme: dark` is set on the root** so native scrollbars, form controls, and
   the browser's own UI match.
 - Meta `theme-color` updates to `--background` for each theme, so mobile browser chrome

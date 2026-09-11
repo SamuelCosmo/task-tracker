@@ -70,6 +70,10 @@
   /* Label on a --primary fill. NOT white in dark: white scores 2.98:1 on
      #818cf8, dark navy scores 5.98:1. */
   --on-primary: light-dark(#ffffff, #0f172a);
+  /* Indigo text on an INVERTED surface (toasts: --text-primary fill). Light mode
+     inverts to a dark fill, so it needs the light indigo, and vice versa.
+     8.96:1 on #0f172a, 6.01:1 on #f8fafc. */
+  --primary-inverse: light-dark(#a5b4fc, #4f46e5);
 
   /* --- Borders ------------------------------------------------------------ */
   --border: light-dark(#e2e8f0, #334155); /* decorative separators, card edges */
@@ -183,6 +187,7 @@
   --color-primary-light: var(--primary-light);
   --color-primary-strong: var(--primary-strong);
   --color-on-primary: var(--on-primary);
+  --color-primary-inverse: var(--primary-inverse);
 
   --color-border: var(--border);
   --color-border-strong: var(--border-strong);

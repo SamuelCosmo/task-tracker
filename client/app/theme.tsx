@@ -42,12 +42,10 @@ function readStoredTheme(): Theme {
 /**
  * Suspend CSS transitions for one frame while the theme flips.
  *
- * Two reasons. The spec says theme changes are not animated (Module 09 §9.8) —
- * a 200ms cross-fade of every colour on the page is janky on long lists. And
- * more importantly: Chrome never completes a colour transition whose target
- * changed through the downlevelled light-dark() toggle, so any element with a
- * colour transition would FREEZE at the old theme's colour. Verified on
- * buttons, chips and inputs; elements without transitions were fine.
+ * Theme changes are not animated (Module 09 §9.8): a cross-fade of every colour
+ * on the page is expensive, janky on long lists, and draws attention to a change
+ * the user just asked for. Without this, every element with a colour transition
+ * would fade over its own duration while the rest of the page snapped.
  */
 function withoutTransitions(mutate: () => void) {
   const style = document.createElement('style');
@@ -55,8 +53,7 @@ function withoutTransitions(mutate: () => void) {
   document.head.appendChild(style);
   mutate();
   // Force a synchronous style + layout pass while transitions are disabled.
-  // This also cancels any transition already stuck mid-flight.
-  void document.documentElement.offsetHeight;
+  document.documentElement.getBoundingClientRect();
   // setTimeout rather than requestAnimationFrame: rAF does not fire in a
   // hidden tab, which would leave transitions disabled until it is shown.
   setTimeout(() => style.remove(), 0);
