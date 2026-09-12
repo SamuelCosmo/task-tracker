@@ -1,7 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider, themeScript } from "./theme";
+import { ToastProvider } from "@/components/molecules";
+import { AppShell } from "@/components/templates";
+import { getShellData } from "@/lib/api";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,11 +17,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Task Tracker",
+  title: "Momentum",
   description: "A focused task tracker for daily use.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export const viewport: Viewport = {
+  // Safe-area insets are only reported with viewport-fit=cover.
+  viewportFit: "cover",
+};
+
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const shell = await getShellData();
+
   return (
     // suppressHydrationWarning: the pre-paint script below sets a theme class on
     // <html>, so the server markup intentionally differs from the client's.
@@ -30,8 +40,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className="min-h-full">
+        <ThemeProvider>
+          <ToastProvider>
+            <AppShell {...shell}>{children}</AppShell>
+          </ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

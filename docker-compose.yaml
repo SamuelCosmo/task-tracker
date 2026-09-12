@@ -13,6 +13,9 @@ services:
     build: ./server
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/tasktracker
+      # Due dates are calendar days; "overdue" depends on what day it is for the
+      # USER. Containers default to UTC, so set the deployment timezone in .env.
+      TZ: ${TZ:-UTC}
     ports:
       - '4200:4200'
     depends_on:
@@ -25,6 +28,7 @@ services:
         NEXT_PUBLIC_API_URL: http://localhost:4200
     environment:
       API_URL: http://backend:4200
+      TZ: ${TZ:-UTC}
     ports:
       - '3000:3000'
     depends_on:

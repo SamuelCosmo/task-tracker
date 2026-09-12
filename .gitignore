@@ -17,4 +17,7 @@ node_modules/
 Thumbs.db
 
 # test coverage (once tests exist)
-coverage/.claude/worktrees/
+coverage/
+
+# Claude Code worktrees (nested checkouts must never be committed)
+.claude/worktrees/

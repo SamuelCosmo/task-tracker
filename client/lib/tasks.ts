@@ -30,7 +30,8 @@ export interface Task {
   completedAt: string | null;
   /** Derived server-side from status. */
   done: boolean;
-  /** Derived server-side from dueDate + status. */
+  /** Derived server-side from dueDate + status — in the SERVER'S timezone.
+   *  Advisory only: anything shown to the user recomputes with lib/dates. */
   overdue: boolean;
 }
 

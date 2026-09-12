@@ -1,22 +1,15 @@
 import TaskList from './TaskList';
-import ThemeToggle from './ThemeToggle';
+import { TopBar } from '@/components/organisms';
+import { getTasks } from '@/lib/api';
+import type { Task } from '@/lib/tasks';
 
-const API_URL = process.env.API_URL;
-
-interface Task {
-  id: number;
-  title: string;
-  done: boolean;
-}
-
+/* Placeholder until the Phase 4 Dashboard lands. The shell around it is real. */
 export default async function Home() {
   let tasks: Task[] = [];
   let loadFailed = false;
 
   try {
-    const res = await fetch(`${API_URL}/tasks`, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`API responded ${res.status}`);
-    tasks = await res.json();
+    tasks = await getTasks();
   } catch {
     // Tier 2 (docs/design/07-empty-loading-error-states.md §7.6): one region
     // failed, the rest of the page stays usable.
@@ -24,19 +17,19 @@ export default async function Home() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-4 py-8">
-      <header className="mb-6 flex items-center justify-between">
-        <h1 className="text-h1 text-text-primary">Task Tracker</h1>
-        <ThemeToggle />
-      </header>
-
-      {loadFailed ? (
-        <p className="rounded-lg border border-border bg-surface p-4 text-body text-error-strong shadow-card">
-          Couldn&apos;t load your tasks. Check your connection and try again.
-        </p>
-      ) : (
-        <TaskList initialTasks={tasks} />
-      )}
-    </div>
+    <>
+      <TopBar title="Home">
+        <span className="text-h1 text-text-primary">Task Tracker</span>
+      </TopBar>
+      <main className="mx-auto w-full max-w-[1120px] px-4 py-6 md:px-6 lg:px-8">
+        {loadFailed ? (
+          <p className="rounded-lg border border-border bg-surface p-4 text-body text-error-strong shadow-card">
+            Couldn&apos;t load your tasks. Check your connection and try again.
+          </p>
+        ) : (
+          <TaskList initialTasks={tasks} />
+        )}
+      </main>
+    </>
   );
 }

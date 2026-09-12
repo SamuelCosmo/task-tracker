@@ -17,9 +17,10 @@ import {
   Trash2,
 } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import ThemeToggle from '@/app/ThemeToggle';
+import { TopBar } from '@/components/organisms';
 import { MoleculesSection } from './MoleculesSection';
 import { InteractiveSection } from './InteractiveSection';
+import { OverlaysSection } from './OverlaysSection';
 import {
   Badge,
   Button,
@@ -90,14 +91,14 @@ export function StyleguideContent() {
   const someDone = !allDone && (checks.a || checks.b || checks.c);
 
   return (
-    <div className="mx-auto w-full max-w-[1120px] px-4 py-8">
-      <header className="mb-6 flex items-center justify-between">
+    <>
+      <TopBar title="Styleguide">
         <div>
-          <h1 className="text-h1 text-text-primary">Styleguide</h1>
-          <p className="text-sm text-text-muted">Atoms 16/16 · Molecules 14/14 · every state · both themes</p>
+          <h1 className="text-h2 text-text-primary">Styleguide</h1>
+          <p className="text-sm text-text-muted">Atoms 16/16 · Molecules 14/14 · Organisms 7/14 · every state · both themes</p>
         </div>
-        <ThemeToggle />
-      </header>
+      </TopBar>
+      <div className="mx-auto w-full max-w-[1120px] px-4 py-6 md:px-6 lg:px-8">
 
       <div className="flex flex-col gap-6">
         <Section title="Button">
@@ -405,7 +406,9 @@ export function StyleguideContent() {
         </Section>
         <MoleculesSection />
         <InteractiveSection />
+        <OverlaysSection />
+        </div>
       </div>
-    </div>
+    </>
   );
 }
